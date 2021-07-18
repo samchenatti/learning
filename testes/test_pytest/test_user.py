@@ -1,4 +1,3 @@
-from _pytest.python_api import raises
 import pytest
 from my_package.user import User
 from pytest_mock import MockerFixture
