@@ -180,9 +180,7 @@ papagaio_mock.fala(frrase='Olá') # Não funciona
 
 Use com cuidado! Como a geração de casos de teste é aleatória, inevitavelmente ele vai encontrar casos que não estavam cobertos e vai quebrar sua esteira.
 
-```Python
-```
-
+Veja exemplos em `test_pytest/test_hypothesis.py`
 ### Mixer
 
 ## Considerações finais
