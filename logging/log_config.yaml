@@ -1,0 +1,19 @@
+version: 1
+
+formatters:
+  default:
+    class: logging.Formatter
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+handlers:
+  default:
+    class: logging.StreamHandler
+    stream: 'ext://sys.stdout'
+    formatter: default
+
+loggers:
+  my_app:
+    class: logging.Logger
+    level: DEBUG
+    handlers:
+      - default
