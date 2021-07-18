@@ -1,8 +1,9 @@
+from _pytest.python_api import raises
 import pytest
 from my_package.user import User
 from pytest_mock import MockerFixture
 from requests import Response
-
+from sys import platform
 # Como não definimos escopo, essa fixture é chamada uma vez por cada teste
 
 
@@ -62,13 +63,25 @@ def self_logout_user() -> User:
 def test_self_logout_user(self_logout_user: User):
     assert self_logout_user.logged
 
+# Exemplo de fixtures vindas da conftest.py
+
+
+def test_conftest_fixture(conftest_fixture: int):
+    assert conftest_fixture == 1
+
 # Exemplo de parametrização de teste
 
 
-@pytest.mark.parametrize('number', [1, 123, 555, 6])
-def test_auto_fixture(number: int):
+@pytest.mark.parametrize(
+    'a,b,expected',
+    [
+        [1, 1, 2],
+        [2, 2, 4]
+    ]
+)
+def test_auto_fixture(a: int, b: int, expected: int):
     # print('Number:', number)
-    assert number > 0
+    assert a + b == expected
 
 # Exemplo de usuário mockando requets (ver material de Mock no readme primeiro)
 
@@ -85,3 +98,23 @@ def test_user_login_sucess(example_user: User, mocker: MockerFixture):
 # À princípio o uso de mock pode parecer meio estranho, já que você está
 # emulando o comportamento de algo. Mas lembre-se que este algo já foi testado
 # e a interface dele está garantida
+
+# Outros decorators da PyTest que são interessantes
+
+
+@pytest.mark.xfail
+def test_should_fail():
+    """
+    Testes marcados com xfail tem falha esperada
+    """
+    assert False
+
+
+@pytest.mark.skip('Este teste deve ser skipado por que X, Y e Z')
+def test_should_be_skipped():
+    raise Exception
+
+
+@pytest.mark.skipif(platform == 'linux', reason='Só roda em Windows')
+def test_conditional_skip():
+    raise Exception

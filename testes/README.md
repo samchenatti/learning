@@ -183,6 +183,8 @@ Use com cuidado! Como a geração de casos de teste é aleatória, inevitavelmen
 Veja exemplos em `test_pytest/test_hypothesis.py`
 ### Mixer
 
+O Mixer auxília na geração de objetos baseados em modelos de ORM. Ele cria os objetos preenchendo automaticamente os atributos dos objetos baseados em seus tipos.
+
 ## Considerações finais
  - Escrever testes unitários logo após implementar um código ajuda a conferir sua lógica
  - Não escreva os testes apenas pela cobertura. As vezes, mesmo que a unidade sendo testada esteja 100% coberta ainda podem haver fluxos que você não cobriu
