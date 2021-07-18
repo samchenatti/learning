@@ -1,9 +1,11 @@
 import pytest
 from my_package.user import User
 from pytest_mock import MockerFixture
-
+from requests import Response
 
 # Como não definimos escopo, essa fixture é chamada uma vez por cada teste
+
+
 @pytest.fixture
 def example_user() -> User:
     """
@@ -45,19 +47,41 @@ def test_two_users(loggedin_user: User, other_user: User):
     assert loggedin_user.name == 'Samuel'
     assert other_user.name == 'Rafael'
 
-# Exemplo de fixture automática
-
 # Exemplo de clean-up com fixtures
 
 
 @pytest.fixture
-def self_logout_user():
-    user = User(name='Auto Delete User')
+def self_logout_user() -> User:
+    user = User(name='Self Logout User')
+    user.logged = True
     yield user
+    user.logged = False
+    print('Usuário deslogado após o teste')
 
 
-# Exemplo de usuário mockando requets
+def test_self_logout_user(self_logout_user: User):
+    assert self_logout_user.logged
+
+# Exemplo de parametrização de teste
 
 
-def test_user_login_sucess(example_user: User):
-    pass
+@pytest.mark.parametrize('number', [1, 123, 555, 6])
+def test_auto_fixture(number: int):
+    # print('Number:', number)
+    assert number > 0
+
+# Exemplo de usuário mockando requets (ver material de Mock no readme primeiro)
+
+
+def test_user_login_sucess(example_user: User, mocker: MockerFixture):
+    sucess_response = Response()
+    sucess_response.status_code = 200
+
+    mocked_get = mocker.patch('my_package.user.requests.get', autospec=True)
+    mocked_get.return_value = sucess_response
+
+    assert example_user.login(password='123'), 'Deve ser possível fazer login'
+
+# À princípio o uso de mock pode parecer meio estranho, já que você está
+# emulando o comportamento de algo. Mas lembre-se que este algo já foi testado
+# e a interface dele está garantida
