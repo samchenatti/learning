@@ -82,6 +82,17 @@ def test_auto_fixture(a: int, b: int, expected: int):
     # print('Number:', number)
     assert a + b == expected
 
+# O PyTest também permite o uso de classes para organizar testes relacionados
+# usefixtures permite que um teste utilize fixtures sem precisar receber
+# parametros. Ao utiliza-lo em classes, todos os métodos chamarão a fixture
+
+
+@pytest.mark.usefixtures('conftest_fixture')
+class TestUser(object):
+
+    def test_something(self, example_user: User):
+        assert example_user.name == 'Samuel'
+
 # Exemplo de usuário mockando requets (ver material de Mock no readme primeiro)
 
 
