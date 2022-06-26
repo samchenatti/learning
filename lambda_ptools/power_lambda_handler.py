@@ -1,4 +1,4 @@
-from aws_lambda_powertools.event_handler.api_gateway import APIGatewayRestResolver
+from aws_lambda_powertools.event_handler.api_gateway import APIGatewayRestResolver, content_types
 from src.user.user import create_user
 from src.product.product import create_product
 from pydantic import ValidationError
@@ -40,6 +40,19 @@ def create_product_api():
     )
 
     return new_product.json()
+
+
+@app.exception_handler(ValidationError)
+def handle_validation_error(error: ValidationError):
+    """
+    Trata exceções do tipo ValidationError e as retorna de uma forma
+    compreensive para o usuário
+    """
+    return Response(
+        status_code=500,
+        content_type=content_types.APPLICATION_JSON,
+        body=error.json()
+    )
 
 
 def lambda_handler(event: dict, context: dict) -> dict:
