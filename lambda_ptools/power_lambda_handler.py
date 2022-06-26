@@ -1,8 +1,11 @@
-from aws_lambda_powertools.event_handler.api_gateway import APIGatewayRestResolver, content_types
-from src import user
-from src import product
+from aws_lambda_powertools.event_handler.api_gateway import (
+    APIGatewayRestResolver, Response, content_types)
+from aws_lambda_powertools.logging import Logger
 from pydantic import ValidationError
-from aws_lambda_powertools.event_handler.api_gateway import Response
+
+from src import product, user
+
+logger = Logger()
 
 app = APIGatewayRestResolver(strip_prefixes=['/api/v0'])
 app.include_router(router=user.router)
@@ -37,4 +40,6 @@ def lambda_handler(event: dict, context: dict) -> dict:
         A Lambda tem que retornar uma dicionário no formato esperado por quem
         originou o evento. O próprio Event Handler se encarrega de fazer isso.
     """
+    logger.info('Iniciou a execução: %s', 'teste')
+
     return app(event=event, context=context)
