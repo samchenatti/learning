@@ -1,45 +1,12 @@
 from aws_lambda_powertools.event_handler.api_gateway import APIGatewayRestResolver, content_types
-from src.user.user import create_user
-from src.product.product import create_product
+from src import user
+from src import product
 from pydantic import ValidationError
 from aws_lambda_powertools.event_handler.api_gateway import Response
 
 app = APIGatewayRestResolver(strip_prefixes=['/api/v0'])
-
-
-@app.post('/usuarios/')
-def create_user_api():
-    """
-    Endpoint para criação de novos usuários
-    """
-    new_user = create_user(
-        name=app.current_event.json_body.get('name'),
-        age=app.current_event.json_body.get('age')
-    )
-
-    return new_user.json()
-
-
-@app.get('/usuarios/<id_usuario>')
-def get_user_api(id_usuario: int):
-    """
-    Endpoint para busca de usuario por id
-    """
-
-    return {'mensagem': f'Usuario com id {id_usuario} nao encontrado'}
-
-
-@app.post('/produtos/')
-def create_product_api():
-    """
-    Endpoint para criação de novos produtos
-    """
-    new_product = create_product(
-        name=app.current_event.json_body.get('name'),
-        price=app.current_event.json_body.get('price')
-    )
-
-    return new_product.json()
+app.include_router(router=user.router)
+app.include_router(router=product.router)
 
 
 @app.exception_handler(ValidationError)
